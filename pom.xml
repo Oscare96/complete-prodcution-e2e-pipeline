@@ -58,7 +58,18 @@
        		 <groupId>org.springframework.boot</groupId>
        		 <artifactId>spring-boot-starter-thymeleaf</artifactId>
     	</dependency>
-
+		
+		 <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://44.201.248.40:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>http://44.201.248.40:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>		 
+	
 	</dependencies>
 
 	<build>
