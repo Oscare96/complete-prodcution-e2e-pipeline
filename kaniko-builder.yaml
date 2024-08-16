@@ -1,22 +1,36 @@
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  name: app1-deployment
 spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
-    imagePullPolicy: Always
-    command:
-    - sleep
-    args:
-    - 9999999
-    volumeMounts:
-      - name: jenkins-docker-cfg
-        mountPath: /kaniko/.docker
-  volumes:
-  - name: jenkins-docker-cfg
-    projected:
-      sources:
-      - secret:
-          name: docker-credentials
-          items:
-            - key: .dockerconfigjson
-              path: config.json
+  selector:
+    matchLabels:
+      app: app1
+  replicas: 2 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+        - name: app1
+          image: oscar996/app1:latest  # Image that will be used to containers in the cluster
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080 # The port that the container is running on in the cluster
+
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: app1-ssvc
+spec:
+  selector:
+    app: app1
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8080 
+  type: LoadBalancer # type of the service.
